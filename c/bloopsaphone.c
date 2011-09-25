@@ -253,7 +253,8 @@ bloops_synth(int length, float* buffer)
                 A->period = 100.0 / (freq * freq + 0.001);
               }
 
-              A->nextnote[0] += (int)(tempo2frames(B->tempo) * (4.0f / note->duration));
+              float length = 4.0f / note->duration;
+              A->nextnote[0] += (int)(tempo2frames(B->tempo) * (length + length * (1 - 1.0f / (1 << note->dotted))));
             }
             A->nextnote[1]++;
           }

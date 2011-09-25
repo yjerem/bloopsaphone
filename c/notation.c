@@ -1,3 +1,4 @@
+
 #line 1 "c/notation.rl"
 //
 // notation.rl
@@ -31,16 +32,18 @@
 
 #define NEXT() \
   NOTE.duration = len; \
+  NOTE.dotted = dot; \
   NOTE.octave = oct; \
   mod = 0; \
   tone = 0; \
   len = 4; \
+  dot = 0; \
   fxval = 0; \
   fxmod = 0; \
   S->nlen++
 
 
-#line 44 "c/notation.c"
+#line 47 "c/notation.c"
 static const char _bloopnotes_actions[] = {
 	0, 1, 1, 1, 3, 1, 4, 1, 
 	6, 1, 8, 1, 9, 1, 10, 1, 
@@ -50,14 +53,16 @@ static const char _bloopnotes_actions[] = {
 	23, 1, 24, 1, 25, 1, 26, 1, 
 	27, 1, 28, 1, 29, 1, 30, 1, 
 	31, 1, 32, 1, 33, 1, 34, 1, 
-	35, 1, 36, 1, 41, 2, 0, 37, 
-	2, 0, 39, 2, 0, 40, 2, 28, 
-	39, 2, 29, 40, 2, 35, 0, 2, 
-	35, 5, 2, 35, 30, 2, 35, 32, 
-	3, 1, 2, 38, 3, 3, 2, 38, 
-	3, 30, 2, 38, 3, 32, 2, 38, 
-	3, 35, 4, 5, 3, 35, 5, 7, 
-	4, 35, 4, 5, 7
+	35, 1, 36, 1, 37, 1, 42, 2, 
+	0, 38, 2, 0, 40, 2, 0, 41, 
+	2, 29, 40, 2, 30, 41, 2, 36, 
+	0, 2, 36, 5, 2, 36, 31, 2, 
+	36, 33, 3, 1, 2, 39, 3, 3, 
+	2, 39, 3, 28, 0, 38, 3, 28, 
+	0, 40, 3, 28, 0, 41, 3, 31, 
+	2, 39, 3, 33, 2, 39, 3, 36, 
+	4, 5, 3, 36, 5, 7, 3, 36, 
+	28, 0, 4, 36, 4, 5, 7
 };
 
 static const short _bloopnotes_key_offsets[] = {
@@ -75,8 +80,9 @@ static const short _bloopnotes_key_offsets[] = {
 	245, 246, 247, 248, 256, 260, 261, 262, 
 	263, 264, 272, 273, 274, 282, 283, 284, 
 	285, 286, 294, 295, 296, 297, 298, 306, 
-	317, 319, 322, 323, 323, 325, 328, 329, 
-	329, 336, 341, 345, 350, 353, 354
+	317, 319, 323, 325, 325, 327, 329, 333, 
+	335, 335, 337, 345, 351, 355, 360, 363, 
+	364, 365
 };
 
 static const char _bloopnotes_trans_keys[] = {
@@ -119,12 +125,14 @@ static const char _bloopnotes_trans_keys[] = {
 	45, 58, 9, 13, 48, 57, 112, 101, 
 	101, 100, 32, 43, 45, 58, 9, 13, 
 	48, 57, 32, 43, 45, 9, 13, 49, 
-	57, 65, 71, 97, 103, 49, 57, 58, 
-	48, 57, 58, 49, 57, 58, 48, 57, 
-	58, 58, 48, 57, 65, 71, 97, 103, 
-	58, 65, 71, 97, 103, 65, 71, 97, 
-	103, 35, 91, 98, 49, 56, 91, 49, 
-	56, 91, 91, 0
+	57, 65, 71, 97, 103, 49, 57, 46, 
+	58, 48, 57, 46, 58, 46, 58, 49, 
+	57, 46, 58, 48, 57, 46, 58, 46, 
+	58, 46, 58, 48, 57, 65, 71, 97, 
+	103, 46, 58, 65, 71, 97, 103, 65, 
+	71, 97, 103, 35, 91, 98, 49, 56, 
+	91, 49, 56, 91, 91, 46, 58, 65, 
+	71, 97, 103, 0
 };
 
 static const char _bloopnotes_single_lengths[] = {
@@ -142,8 +150,9 @@ static const char _bloopnotes_single_lengths[] = {
 	1, 1, 1, 4, 4, 1, 1, 1, 
 	1, 4, 1, 1, 4, 1, 1, 1, 
 	1, 4, 1, 1, 1, 1, 4, 3, 
-	0, 1, 1, 0, 0, 1, 1, 0, 
-	1, 1, 0, 3, 1, 1, 1
+	0, 2, 2, 0, 2, 0, 2, 2, 
+	0, 2, 2, 2, 0, 3, 1, 1, 
+	1, 2
 };
 
 static const char _bloopnotes_range_lengths[] = {
@@ -161,8 +170,9 @@ static const char _bloopnotes_range_lengths[] = {
 	0, 0, 0, 2, 0, 0, 0, 0, 
 	0, 2, 0, 0, 2, 0, 0, 0, 
 	0, 2, 0, 0, 0, 0, 2, 4, 
-	1, 1, 0, 0, 1, 1, 0, 0, 
-	3, 2, 2, 1, 1, 0, 0
+	1, 1, 0, 0, 0, 1, 1, 0, 
+	0, 0, 3, 2, 2, 1, 1, 0, 
+	0, 2
 };
 
 static const short _bloopnotes_index_offsets[] = {
@@ -180,18 +190,19 @@ static const short _bloopnotes_index_offsets[] = {
 	286, 288, 290, 292, 299, 304, 306, 308, 
 	310, 312, 319, 321, 323, 330, 332, 334, 
 	336, 338, 345, 347, 349, 351, 353, 360, 
-	368, 370, 373, 375, 376, 378, 381, 383, 
-	384, 389, 393, 396, 401, 404, 406
+	368, 370, 374, 377, 378, 381, 383, 387, 
+	390, 391, 394, 400, 405, 408, 413, 416, 
+	418, 420
 };
 
-static const char _bloopnotes_trans_targs[] = {
+static const unsigned char _bloopnotes_trans_targs[] = {
 	2, 28, 33, 41, 49, 63, 76, 92, 
 	111, 3, 18, 23, 111, 4, 111, 5, 
 	6, 16, 17, 5, 12, 111, 5, 6, 
 	16, 5, 12, 111, 7, 15, 7, 111, 
 	7, 8, 7, 12, 111, 9, 111, 10, 
-	126, 9, 111, 11, 111, 126, 11, 111, 
-	13, 126, 12, 111, 14, 111, 126, 14, 
+	128, 9, 111, 11, 111, 128, 11, 111, 
+	13, 128, 12, 111, 14, 111, 128, 14, 
 	111, 8, 12, 111, 7, 15, 7, 9, 
 	111, 6, 16, 12, 111, 19, 111, 20, 
 	111, 21, 111, 22, 111, 5, 6, 16, 
@@ -230,12 +241,14 @@ static const char _bloopnotes_trans_targs[] = {
 	105, 111, 5, 6, 16, 17, 5, 12, 
 	111, 107, 111, 108, 111, 109, 111, 110, 
 	111, 5, 6, 16, 17, 5, 12, 111, 
-	111, 112, 116, 111, 120, 123, 123, 0, 
-	113, 111, 115, 114, 111, 115, 111, 111, 
-	117, 111, 119, 118, 111, 119, 111, 111, 
-	122, 121, 123, 123, 111, 122, 123, 123, 
-	111, 123, 123, 111, 124, 1, 124, 125, 
-	111, 1, 125, 111, 1, 111, 1, 111, 
+	111, 112, 117, 111, 122, 125, 125, 0, 
+	113, 111, 114, 115, 116, 111, 114, 115, 
+	111, 111, 114, 115, 111, 118, 111, 119, 
+	120, 121, 111, 119, 120, 111, 111, 119, 
+	120, 111, 123, 124, 129, 125, 125, 111, 
+	123, 124, 125, 125, 111, 125, 125, 111, 
+	126, 1, 126, 127, 111, 1, 127, 111, 
+	1, 111, 1, 111, 123, 124, 125, 125, 
 	111, 111, 111, 111, 111, 111, 111, 111, 
 	111, 111, 111, 111, 111, 111, 111, 111, 
 	111, 111, 111, 111, 111, 111, 111, 111, 
@@ -251,99 +264,84 @@ static const char _bloopnotes_trans_targs[] = {
 	111, 111, 111, 111, 111, 111, 111, 111, 
 	111, 111, 111, 111, 111, 111, 111, 111, 
 	111, 111, 111, 111, 111, 111, 111, 111, 
-	111, 111, 111, 111, 111, 0
+	111, 111, 111, 111, 111, 111, 111, 111, 
+	111, 0
 };
 
-static const char _bloopnotes_trans_actions[] = {
+static const unsigned char _bloopnotes_trans_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	67, 0, 0, 0, 67, 0, 67, 39, 
-	39, 39, 39, 39, 39, 67, 0, 0, 
-	0, 0, 0, 67, 55, 55, 55, 67, 
-	0, 0, 0, 0, 67, 0, 67, 5, 
-	120, 0, 67, 7, 67, 116, 0, 67, 
-	5, 112, 0, 67, 7, 67, 87, 0, 
-	67, 0, 0, 67, 55, 55, 55, 0, 
-	67, 0, 0, 0, 67, 0, 67, 0, 
-	67, 0, 67, 0, 67, 41, 41, 41, 
-	41, 41, 41, 67, 0, 67, 0, 67, 
-	0, 67, 0, 67, 13, 13, 13, 13, 
-	13, 13, 67, 0, 67, 0, 67, 0, 
-	67, 0, 67, 17, 17, 17, 17, 17, 
-	17, 67, 0, 0, 67, 0, 67, 35, 
-	35, 35, 35, 35, 35, 67, 0, 67, 
-	0, 67, 0, 67, 0, 67, 37, 37, 
-	37, 37, 37, 37, 67, 0, 0, 67, 
-	0, 67, 29, 29, 29, 29, 29, 29, 
-	67, 0, 67, 0, 67, 0, 67, 0, 
-	67, 31, 31, 31, 31, 31, 31, 67, 
-	0, 0, 0, 67, 0, 67, 0, 67, 
-	0, 67, 43, 43, 43, 43, 43, 43, 
-	67, 0, 67, 0, 67, 0, 67, 0, 
-	67, 45, 45, 45, 45, 45, 45, 67, 
-	0, 67, 0, 67, 0, 67, 11, 11, 
-	11, 11, 11, 11, 67, 0, 67, 0, 
-	0, 67, 0, 67, 0, 67, 0, 67, 
-	47, 47, 47, 47, 47, 47, 67, 0, 
-	67, 0, 67, 0, 67, 0, 67, 0, 
-	67, 0, 67, 33, 33, 33, 33, 33, 
-	33, 67, 0, 0, 0, 67, 0, 67, 
-	0, 67, 0, 67, 0, 67, 19, 19, 
-	19, 19, 19, 19, 67, 0, 67, 0, 
-	67, 0, 67, 0, 67, 0, 67, 15, 
-	15, 15, 15, 15, 15, 67, 0, 67, 
-	0, 67, 0, 67, 21, 21, 21, 21, 
-	21, 21, 67, 0, 0, 0, 0, 67, 
-	0, 67, 0, 67, 0, 67, 0, 67, 
-	27, 27, 27, 27, 27, 27, 67, 0, 
-	67, 0, 67, 23, 23, 23, 23, 23, 
-	23, 67, 0, 67, 0, 67, 0, 67, 
-	0, 67, 9, 9, 9, 9, 9, 9, 
-	67, 0, 67, 0, 67, 0, 67, 0, 
-	67, 25, 25, 25, 25, 25, 25, 67, 
-	65, 0, 0, 65, 0, 63, 63, 0, 
-	49, 78, 0, 0, 72, 0, 72, 72, 
-	51, 81, 0, 0, 75, 0, 75, 75, 
-	0, 0, 84, 84, 69, 0, 84, 84, 
-	69, 84, 84, 69, 93, 57, 93, 93, 
-	108, 53, 90, 104, 1, 96, 3, 100, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 67, 67, 
-	67, 67, 67, 67, 67, 67, 78, 72, 
-	72, 72, 81, 75, 75, 75, 69, 69, 
-	69, 108, 104, 96, 100, 0
+	69, 0, 0, 0, 69, 0, 69, 39, 
+	39, 39, 39, 39, 39, 69, 0, 0, 
+	0, 0, 0, 69, 57, 57, 57, 69, 
+	0, 0, 0, 0, 69, 0, 69, 5, 
+	138, 0, 69, 7, 69, 130, 0, 69, 
+	5, 126, 0, 69, 7, 69, 89, 0, 
+	69, 0, 0, 69, 57, 57, 57, 0, 
+	69, 0, 0, 0, 69, 0, 69, 0, 
+	69, 0, 69, 0, 69, 41, 41, 41, 
+	41, 41, 41, 69, 0, 69, 0, 69, 
+	0, 69, 0, 69, 13, 13, 13, 13, 
+	13, 13, 69, 0, 69, 0, 69, 0, 
+	69, 0, 69, 17, 17, 17, 17, 17, 
+	17, 69, 0, 0, 69, 0, 69, 35, 
+	35, 35, 35, 35, 35, 69, 0, 69, 
+	0, 69, 0, 69, 0, 69, 37, 37, 
+	37, 37, 37, 37, 69, 0, 0, 69, 
+	0, 69, 29, 29, 29, 29, 29, 29, 
+	69, 0, 69, 0, 69, 0, 69, 0, 
+	69, 31, 31, 31, 31, 31, 31, 69, 
+	0, 0, 0, 69, 0, 69, 0, 69, 
+	0, 69, 43, 43, 43, 43, 43, 43, 
+	69, 0, 69, 0, 69, 0, 69, 0, 
+	69, 45, 45, 45, 45, 45, 45, 69, 
+	0, 69, 0, 69, 0, 69, 11, 11, 
+	11, 11, 11, 11, 69, 0, 69, 0, 
+	0, 69, 0, 69, 0, 69, 0, 69, 
+	47, 47, 47, 47, 47, 47, 69, 0, 
+	69, 0, 69, 0, 69, 0, 69, 0, 
+	69, 0, 69, 33, 33, 33, 33, 33, 
+	33, 69, 0, 0, 0, 69, 0, 69, 
+	0, 69, 0, 69, 0, 69, 19, 19, 
+	19, 19, 19, 19, 69, 0, 69, 0, 
+	69, 0, 69, 0, 69, 0, 69, 15, 
+	15, 15, 15, 15, 15, 69, 0, 69, 
+	0, 69, 0, 69, 21, 21, 21, 21, 
+	21, 21, 69, 0, 0, 0, 0, 69, 
+	0, 69, 0, 69, 0, 69, 0, 69, 
+	27, 27, 27, 27, 27, 27, 69, 0, 
+	69, 0, 69, 23, 23, 23, 23, 23, 
+	23, 69, 0, 69, 0, 69, 0, 69, 
+	0, 69, 9, 9, 9, 9, 9, 9, 
+	69, 0, 69, 0, 69, 0, 69, 0, 
+	69, 25, 25, 25, 25, 25, 25, 69, 
+	67, 0, 0, 67, 0, 65, 65, 0, 
+	51, 80, 0, 0, 0, 74, 49, 49, 
+	110, 74, 0, 0, 74, 53, 83, 0, 
+	0, 0, 77, 49, 49, 114, 77, 0, 
+	0, 77, 0, 0, 0, 86, 86, 71, 
+	49, 49, 134, 134, 106, 86, 86, 71, 
+	95, 59, 95, 95, 122, 55, 92, 118, 
+	1, 98, 3, 102, 0, 0, 86, 86, 
+	71, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 69, 
+	69, 69, 69, 69, 69, 69, 69, 80, 
+	74, 110, 74, 74, 83, 77, 114, 77, 
+	77, 71, 106, 71, 122, 118, 98, 102, 
+	71, 0
 };
 
-static const char _bloopnotes_to_state_actions[] = {
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0, 59, 
-	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0
-};
-
-static const char _bloopnotes_from_state_actions[] = {
+static const unsigned char _bloopnotes_to_state_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
@@ -359,26 +357,48 @@ static const char _bloopnotes_from_state_actions[] = {
 	0, 0, 0, 0, 0, 0, 0, 0, 
 	0, 0, 0, 0, 0, 0, 0, 61, 
 	0, 0, 0, 0, 0, 0, 0, 0, 
-	0, 0, 0, 0, 0, 0, 0
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0
+};
+
+static const unsigned char _bloopnotes_from_state_actions[] = {
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 63, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0, 0, 0, 0, 0, 0, 0, 
+	0, 0
 };
 
 static const short _bloopnotes_eof_trans[] = {
-	0, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 518, 
-	518, 518, 518, 518, 518, 518, 518, 0, 
-	519, 522, 522, 522, 523, 526, 526, 526, 
-	529, 529, 529, 530, 531, 532, 533
+	0, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 535, 
+	535, 535, 535, 535, 535, 535, 535, 0, 
+	536, 540, 538, 540, 540, 541, 545, 543, 
+	545, 545, 553, 547, 553, 549, 550, 551, 
+	552, 553
 };
 
 static const int bloopnotes_start = 111;
@@ -386,7 +406,8 @@ static const int bloopnotes_error = 0;
 
 static const int bloopnotes_en_main = 111;
 
-#line 154 "c/notation.rl"
+
+#line 157 "c/notation.rl"
 
 
 extern void _bloops_track_add(bloops *B, bloopsatrack *track);
@@ -394,7 +415,7 @@ extern void _bloops_track_add(bloops *B, bloopsatrack *track);
 bloopsatrack *
 bloops_track(bloops *B, bloopsaphone *P, char *track, int tracklen)
 {
-  int cs, act, oct = 4, len = 4;
+  int cs, act, oct = 4, len = 4, dot = 0;
   bloopsatrack *S = (bloopsatrack *)malloc(sizeof(bloopsatrack));
   char tone, mod, fxmod, *p, *pe, *pf, *ts, *te, *eof = 0;
   bloopsafxcmd fxcmd = (bloopsafxcmd)0;
@@ -409,16 +430,17 @@ bloops_track(bloops *B, bloopsaphone *P, char *track, int tracklen)
   pe = track + tracklen + 1;
 
   
-#line 413 "c/notation.c"
+#line 434 "c/notation.c"
 	{
 	cs = bloopnotes_start;
 	ts = 0;
 	te = 0;
 	act = 0;
 	}
-#line 176 "c/notation.rl"
+
+#line 179 "c/notation.rl"
   
-#line 422 "c/notation.c"
+#line 444 "c/notation.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -435,11 +457,11 @@ _resume:
 	_nacts = (unsigned int) *_acts++;
 	while ( _nacts-- > 0 ) {
 		switch ( *_acts++ ) {
-	case 34:
-#line 1 "c/notation.rl"
+	case 35:
+#line 1 "NONE"
 	{ts = p;}
 	break;
-#line 443 "c/notation.c"
+#line 465 "c/notation.c"
 		}
 	}
 
@@ -505,19 +527,19 @@ _eof_trans:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 44 "c/notation.rl"
+#line 46 "c/notation.rl"
 	{
     len = ATOI(ts, p - ts);
   }
 	break;
 	case 1:
-#line 48 "c/notation.rl"
+#line 50 "c/notation.rl"
 	{
     oct = ATOI(p - 1, 1);
   }
 	break;
 	case 2:
-#line 52 "c/notation.rl"
+#line 54 "c/notation.rl"
 	{
     switch (tone) {
       case 'a': case 'A':
@@ -559,7 +581,7 @@ _eof_trans:
   }
 	break;
 	case 3:
-#line 92 "c/notation.rl"
+#line 94 "c/notation.rl"
 	{
     bloopsafx *fx = (bloopsafx *)malloc(sizeof(bloopsafx));
     fx->next = NOTE.FX;
@@ -571,157 +593,161 @@ _eof_trans:
   }
 	break;
 	case 4:
-#line 102 "c/notation.rl"
+#line 104 "c/notation.rl"
 	{
     fxval = atoi(p-1) * 1.0f;
   }
 	break;
 	case 5:
-#line 106 "c/notation.rl"
+#line 108 "c/notation.rl"
 	{
     fxval += ATOI(pf, p - pf) * pow(0.1f, p - pf);
   }
 	break;
 	case 6:
-#line 110 "c/notation.rl"
+#line 112 "c/notation.rl"
 	{ pf = p; }
 	break;
 	case 7:
-#line 111 "c/notation.rl"
+#line 113 "c/notation.rl"
 	{ fxval *= -1.0f; }
 	break;
 	case 8:
-#line 112 "c/notation.rl"
+#line 114 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_VOLUME; }
 	break;
 	case 9:
-#line 113 "c/notation.rl"
+#line 115 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_PUNCH; }
 	break;
 	case 10:
-#line 114 "c/notation.rl"
+#line 116 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_ATTACK; }
 	break;
 	case 11:
-#line 115 "c/notation.rl"
+#line 117 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_SUSTAIN; }
 	break;
 	case 12:
-#line 116 "c/notation.rl"
+#line 118 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_DECAY; }
 	break;
 	case 13:
-#line 117 "c/notation.rl"
+#line 119 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_SQUARE; }
 	break;
 	case 14:
-#line 118 "c/notation.rl"
+#line 120 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_SWEEP; }
 	break;
 	case 15:
-#line 119 "c/notation.rl"
+#line 121 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_VIBE; }
 	break;
 	case 16:
-#line 120 "c/notation.rl"
+#line 122 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_VSPEED; }
 	break;
 	case 17:
-#line 121 "c/notation.rl"
+#line 123 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_VDELAY; }
 	break;
 	case 18:
-#line 122 "c/notation.rl"
+#line 124 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_LPF; }
 	break;
 	case 19:
-#line 123 "c/notation.rl"
+#line 125 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_LSWEEP; }
 	break;
 	case 20:
-#line 124 "c/notation.rl"
+#line 126 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_RESONANCE; }
 	break;
 	case 21:
-#line 125 "c/notation.rl"
+#line 127 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_HPF; }
 	break;
 	case 22:
-#line 126 "c/notation.rl"
+#line 128 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_HSWEEP; }
 	break;
 	case 23:
-#line 127 "c/notation.rl"
+#line 129 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_ARP; }
 	break;
 	case 24:
-#line 128 "c/notation.rl"
+#line 130 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_ASPEED; }
 	break;
 	case 25:
-#line 129 "c/notation.rl"
+#line 131 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_PHASE; }
 	break;
 	case 26:
-#line 130 "c/notation.rl"
+#line 132 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_PSWEEP; }
 	break;
 	case 27:
-#line 131 "c/notation.rl"
+#line 133 "c/notation.rl"
 	{ fxcmd = BLOOPS_FX_REPEAT; }
 	break;
 	case 28:
-#line 134 "c/notation.rl"
-	{ len = 1; }
+#line 135 "c/notation.rl"
+	{ dot++; }
 	break;
 	case 29:
-#line 135 "c/notation.rl"
+#line 137 "c/notation.rl"
 	{ len = 1; }
 	break;
 	case 30:
-#line 136 "c/notation.rl"
-	{ mod = p[-1]; }
+#line 138 "c/notation.rl"
+	{ len = 1; }
 	break;
 	case 31:
-#line 138 "c/notation.rl"
-	{ fxmod = p[-1]; }
+#line 139 "c/notation.rl"
+	{ mod = p[-1]; }
 	break;
 	case 32:
-#line 140 "c/notation.rl"
+#line 141 "c/notation.rl"
+	{ fxmod = p[-1]; }
+	break;
+	case 33:
+#line 143 "c/notation.rl"
 	{ tone = p[-1]; }
 	break;
-	case 35:
-#line 1 "c/notation.rl"
-	{te = p+1;}
-	break;
 	case 36:
-#line 150 "c/notation.rl"
+#line 1 "NONE"
 	{te = p+1;}
 	break;
 	case 37:
-#line 143 "c/notation.rl"
+#line 153 "c/notation.rl"
+	{te = p+1;}
+	break;
+	case 38:
+#line 146 "c/notation.rl"
 	{te = p;p--;{
       NOTE.tone = 0;
       NEXT();
     }}
 	break;
-	case 38:
-#line 147 "c/notation.rl"
+	case 39:
+#line 150 "c/notation.rl"
 	{te = p;p--;{ NEXT(); }}
 	break;
-	case 39:
-#line 148 "c/notation.rl"
+	case 40:
+#line 151 "c/notation.rl"
 	{te = p;p--;{ oct++; len = 4; }}
 	break;
-	case 40:
-#line 149 "c/notation.rl"
+	case 41:
+#line 152 "c/notation.rl"
 	{te = p;p--;{ oct--; len = 4; }}
 	break;
-	case 41:
-#line 147 "c/notation.rl"
+	case 42:
+#line 150 "c/notation.rl"
 	{{p = ((te))-1;}{ NEXT(); }}
 	break;
-#line 725 "c/notation.c"
+#line 751 "c/notation.c"
 		}
 	}
 
@@ -730,11 +756,11 @@ _again:
 	_nacts = (unsigned int) *_acts++;
 	while ( _nacts-- > 0 ) {
 		switch ( *_acts++ ) {
-	case 33:
-#line 1 "c/notation.rl"
+	case 34:
+#line 1 "NONE"
 	{ts = 0;}
 	break;
-#line 738 "c/notation.c"
+#line 764 "c/notation.c"
 		}
 	}
 
@@ -753,7 +779,8 @@ _again:
 
 	_out: {}
 	}
-#line 177 "c/notation.rl"
+
+#line 180 "c/notation.rl"
 
   memcpy(&S->params, &P->params, sizeof(bloopsaparams));
 
@@ -790,10 +817,16 @@ bloops_track_str(bloopsatrack *track)
     if (ptr > str)
       strcat(ptr++, " ");
 
-    if (track->notes[i].duration != 4)
+    if (track->notes[i].duration != 4 || track->notes[i].dotted > 0)
     {
-      adv = sprintf(ptr, "%d:", (int)track->notes[i].duration);
+      adv = sprintf(ptr, "%d", (int)track->notes[i].duration);
       ptr += adv;
+
+      int dots = track->notes[i].dotted;
+      while (dots--)
+        strcat(ptr++, ".");
+
+      strcat(ptr++, ":");
     }
 
     if (track->notes[i].tone)
@@ -971,7 +1004,7 @@ bloops_note_freq(char note, int octave)
 #define KEY(name) key = (void *)&P->params.name
 
 
-#line 975 "c/notation.c"
+#line 1008 "c/notation.c"
 static const char _bloopserial_actions[] = {
 	0, 1, 0, 1, 1, 1, 2, 1, 
 	5, 1, 6, 1, 7, 1, 8, 1, 
@@ -1278,7 +1311,8 @@ static const int bloopserial_error = 0;
 
 static const int bloopserial_en_main = 142;
 
-#line 446 "c/notation.rl"
+
+#line 455 "c/notation.rl"
 
 
 bloopsaphone *
@@ -1310,16 +1344,17 @@ bloops_sound_file(bloops *B, char *fname)
 
   P = bloops_square();
   
-#line 1314 "c/notation.c"
+#line 1348 "c/notation.c"
 	{
 	cs = bloopserial_start;
 	ts = 0;
 	te = 0;
 	act = 0;
 	}
-#line 477 "c/notation.rl"
+
+#line 486 "c/notation.rl"
   
-#line 1323 "c/notation.c"
+#line 1358 "c/notation.c"
 	{
 	int _klen;
 	unsigned int _trans;
@@ -1337,10 +1372,10 @@ _resume:
 	while ( _nacts-- > 0 ) {
 		switch ( *_acts++ ) {
 	case 30:
-#line 1 "c/notation.rl"
+#line 1 "NONE"
 	{ts = p;}
 	break;
-#line 1344 "c/notation.c"
+#line 1379 "c/notation.c"
 		}
 	}
 
@@ -1406,150 +1441,150 @@ _eof_trans:
 		switch ( *_acts++ )
 		{
 	case 0:
-#line 400 "c/notation.rl"
+#line 409 "c/notation.rl"
 	{
     fval = ATOI(ts, p - ts) * 1.0f;
   }
 	break;
 	case 1:
-#line 404 "c/notation.rl"
+#line 413 "c/notation.rl"
 	{
     fval = ATOI(pf, p - pf) * pow(0.1f, p - pf);
   }
 	break;
 	case 2:
-#line 408 "c/notation.rl"
+#line 417 "c/notation.rl"
 	{ pf = p; }
 	break;
 	case 3:
-#line 409 "c/notation.rl"
+#line 418 "c/notation.rl"
 	{ fval *= -1.0f; }
 	break;
 	case 4:
-#line 410 "c/notation.rl"
+#line 419 "c/notation.rl"
 	{ KEY(volume); }
 	break;
 	case 5:
-#line 411 "c/notation.rl"
+#line 420 "c/notation.rl"
 	{ KEY(arp); }
 	break;
 	case 6:
-#line 412 "c/notation.rl"
+#line 421 "c/notation.rl"
 	{ KEY(aspeed); }
 	break;
 	case 7:
-#line 413 "c/notation.rl"
+#line 422 "c/notation.rl"
 	{ KEY(attack); }
 	break;
 	case 8:
-#line 414 "c/notation.rl"
+#line 423 "c/notation.rl"
 	{ KEY(decay); }
 	break;
 	case 9:
-#line 415 "c/notation.rl"
+#line 424 "c/notation.rl"
 	{ KEY(dslide); }
 	break;
 	case 10:
-#line 416 "c/notation.rl"
+#line 425 "c/notation.rl"
 	{ KEY(freq); }
 	break;
 	case 11:
-#line 417 "c/notation.rl"
+#line 426 "c/notation.rl"
 	{ KEY(hpf); }
 	break;
 	case 12:
-#line 418 "c/notation.rl"
+#line 427 "c/notation.rl"
 	{ KEY(hsweep); }
 	break;
 	case 13:
-#line 419 "c/notation.rl"
+#line 428 "c/notation.rl"
 	{ KEY(limit); }
 	break;
 	case 14:
-#line 420 "c/notation.rl"
+#line 429 "c/notation.rl"
 	{ KEY(lpf); }
 	break;
 	case 15:
-#line 421 "c/notation.rl"
+#line 430 "c/notation.rl"
 	{ KEY(lsweep); }
 	break;
 	case 16:
-#line 422 "c/notation.rl"
+#line 431 "c/notation.rl"
 	{ KEY(phase); }
 	break;
 	case 17:
-#line 423 "c/notation.rl"
+#line 432 "c/notation.rl"
 	{ KEY(psweep); }
 	break;
 	case 18:
-#line 424 "c/notation.rl"
+#line 433 "c/notation.rl"
 	{ KEY(repeat); }
 	break;
 	case 19:
-#line 425 "c/notation.rl"
+#line 434 "c/notation.rl"
 	{ KEY(resonance); }
 	break;
 	case 20:
-#line 426 "c/notation.rl"
+#line 435 "c/notation.rl"
 	{ KEY(slide); }
 	break;
 	case 21:
-#line 427 "c/notation.rl"
+#line 436 "c/notation.rl"
 	{ KEY(square); }
 	break;
 	case 22:
-#line 428 "c/notation.rl"
+#line 437 "c/notation.rl"
 	{ KEY(sustain); }
 	break;
 	case 23:
-#line 429 "c/notation.rl"
+#line 438 "c/notation.rl"
 	{ KEY(sweep); }
 	break;
 	case 24:
-#line 430 "c/notation.rl"
+#line 439 "c/notation.rl"
 	{ KEY(punch); }
 	break;
 	case 25:
-#line 431 "c/notation.rl"
+#line 440 "c/notation.rl"
 	{ KEY(vibe); }
 	break;
 	case 26:
-#line 432 "c/notation.rl"
+#line 441 "c/notation.rl"
 	{ KEY(vspeed); }
 	break;
 	case 27:
-#line 433 "c/notation.rl"
+#line 442 "c/notation.rl"
 	{ KEY(vdelay); }
 	break;
 	case 28:
-#line 434 "c/notation.rl"
+#line 443 "c/notation.rl"
 	{ KEY(volume); }
 	break;
 	case 31:
-#line 438 "c/notation.rl"
+#line 447 "c/notation.rl"
 	{te = p+1;{ P->params.type = BLOOPS_SQUARE; }}
 	break;
 	case 32:
-#line 439 "c/notation.rl"
+#line 448 "c/notation.rl"
 	{te = p+1;{ P->params.type = BLOOPS_SAWTOOTH; }}
 	break;
 	case 33:
-#line 440 "c/notation.rl"
+#line 449 "c/notation.rl"
 	{te = p+1;{ P->params.type = BLOOPS_SINE; }}
 	break;
 	case 34:
-#line 441 "c/notation.rl"
+#line 450 "c/notation.rl"
 	{te = p+1;{ P->params.type = BLOOPS_NOISE; }}
 	break;
 	case 35:
-#line 437 "c/notation.rl"
+#line 446 "c/notation.rl"
 	{te = p;p--;{ *((float *)key) = fval; }}
 	break;
 	case 36:
-#line 442 "c/notation.rl"
+#line 451 "c/notation.rl"
 	{te = p;p--;}
 	break;
-#line 1553 "c/notation.c"
+#line 1588 "c/notation.c"
 		}
 	}
 
@@ -1559,10 +1594,10 @@ _again:
 	while ( _nacts-- > 0 ) {
 		switch ( *_acts++ ) {
 	case 29:
-#line 1 "c/notation.rl"
+#line 1 "NONE"
 	{ts = 0;}
 	break;
-#line 1566 "c/notation.c"
+#line 1601 "c/notation.c"
 		}
 	}
 
@@ -1581,7 +1616,8 @@ _again:
 
 	_out: {}
 	}
-#line 478 "c/notation.rl"
+
+#line 487 "c/notation.rl"
 
 done:
   fclose(fp);

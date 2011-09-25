@@ -30,10 +30,12 @@
 
 #define NEXT() \
   NOTE.duration = len; \
+  NOTE.dotted = dot; \
   NOTE.octave = oct; \
   mod = 0; \
   tone = 0; \
   len = 4; \
+  dot = 0; \
   fxval = 0; \
   fxmod = 0; \
   S->nlen++
@@ -130,7 +132,8 @@
           "psweep" %{ fxcmd = BLOOPS_FX_PSWEEP; } |
           "repeat" %{ fxcmd = BLOOPS_FX_REPEAT; };
 
-  len = [1-9] [0-9]? ":"? %Alen;
+  dot = "." %{ dot++; };
+  len = [1-9] [0-9]? dot* ":"? %Alen;
   up = "+" %{ len = 1; } len?;
   down = "-" %{ len = 1; } len?;
   mod = [b#] %{ mod = p[-1]; };
@@ -158,7 +161,7 @@ extern void _bloops_track_add(bloops *B, bloopsatrack *track);
 bloopsatrack *
 bloops_track(bloops *B, bloopsaphone *P, char *track, int tracklen)
 {
-  int cs, act, oct = 4, len = 4;
+  int cs, act, oct = 4, len = 4, dot = 0;
   bloopsatrack *S = (bloopsatrack *)malloc(sizeof(bloopsatrack));
   char tone, mod, fxmod, *p, *pe, *pf, *ts, *te, *eof = 0;
   bloopsafxcmd fxcmd = (bloopsafxcmd)0;
@@ -210,10 +213,16 @@ bloops_track_str(bloopsatrack *track)
     if (ptr > str)
       strcat(ptr++, " ");
 
-    if (track->notes[i].duration != 4)
+    if (track->notes[i].duration != 4 || track->notes[i].dotted > 0)
     {
-      adv = sprintf(ptr, "%d:", (int)track->notes[i].duration);
+      adv = sprintf(ptr, "%d", (int)track->notes[i].duration);
       ptr += adv;
+
+      int dots = track->notes[i].dotted;
+      while (dots--)
+        strcat(ptr++, ".");
+
+      strcat(ptr++, ":");
     }
 
     if (track->notes[i].tone)

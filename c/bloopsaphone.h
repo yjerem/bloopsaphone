@@ -75,7 +75,7 @@ typedef struct bloopsafx_tag {
 } bloopsafx;
 
 typedef struct {
-  char tone, octave, duration;
+  char tone, octave, duration, dotted;
   bloopsafx *FX;
 } bloopsanote;
 
